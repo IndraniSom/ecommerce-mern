@@ -1,0 +1,119 @@
+[
+    {
+      "name": "Paper bags",
+      "price": 20,
+      "description": "Powerful laptop for all your computing needs",
+      "image": "https://plus.unsplash.com/premium_photo-1661666994446-6352c334bf80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGFwZXIlMjBiYWdzfGVufDB8fDB8fHww",
+      "category": "Electronics",
+      "countInStock": 10,
+      "cta": "Buy Now",
+      "rating": 4.5,
+      "numReviews": 8,
+      "reviews": [
+        {
+          "name": "John Doe",
+          "rating": 5,
+          "comment": "Great laptop, very fast!"
+        },
+        {
+          "name": "Jane Smith",
+          "rating": 4,
+          "comment": "Good value for money."
+        }
+      ]
+    },
+    {
+      "name": "Blazer",
+      "price": 1500,
+      "description": "High-performance smartphone with advanced features",
+      "image": "https://plus.unsplash.com/premium_photo-1675186049563-000f7ac02c44?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cmVkJTIwYmxhemVyfGVufDB8fDB8fHww",
+      "category": "Electronics",
+      "countInStock": 15,
+      "cta": "Buy Now",
+      "rating": 4.2,
+      "numReviews": 6,
+      "reviews": [
+        {
+          "name": "Alice Brown",
+          "rating": 4,
+          "comment": "Sleek design and good camera."
+        },
+        {
+          "name": "Bob Green",
+          "rating": 3,
+          "comment": "Battery life could be better."
+        }
+      ]
+    },
+    {
+      "name": "Bamboo Toothbrush ",
+      "price": 30,
+      "description": "Sturdy bookshelf for organizing your books",
+      "image": "https://images.unsplash.com/photo-1553691475-f38e4026275b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fGJhbWJvbyUyMHRvb3RoYnJ1c2hlc3xlbnwwfHwwfHx8MA%3D%3D",
+      "category": "Furniture",
+      "countInStock": 5,
+      "cta": "Add to Cart",
+      "rating": 4.0,
+      "numReviews": 3,
+      "reviews": [
+        {
+          "name": "Emily White",
+          "rating": 4,
+          "comment": "Easy to assemble and looks great."
+        },
+        {
+          "name": "David Black",
+          "rating": 5,
+          "comment": "Perfect for my home office."
+        }
+      ]
+    },
+    {
+        "name": "Toothbrush ",
+        "price": 30,
+        "description": "Sturdy bookshelf for organizing your books",
+        "image": "https://images.unsplash.com/photo-1553691475-f38e4026275b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fGJhbWJvbyUyMHRvb3RoYnJ1c2hlc3xlbnwwfHwwfHx8MA%3D%3D",
+        "category": "Furniture",
+        "countInStock": 5,
+        "cta": "Add to Cart",
+        "rating": 4.0,
+        "numReviews": 3,
+        "reviews": [
+          {
+            "name": "Emily White",
+            "rating": 4,
+            "comment": "Easy to assemble and looks great."
+          },
+          {
+            "name": "David Black",
+            "rating": 5,
+            "comment": "Perfect for my home office."
+          }
+        ]
+      },
+      {
+        "name": "bags",
+        "price": 20,
+        "description": "Powerful laptop for all your computing needs",
+        "image": "https://plus.unsplash.com/premium_photo-1661666994446-6352c334bf80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGFwZXIlMjBiYWdzfGVufDB8fDB8fHww",
+        "category": "Electronics",
+        "countInStock": 10,
+        "cta": "Buy Now",
+        "rating": 4.5,
+        "numReviews": 8,
+        "reviews": [
+          {
+            "name": "John Doe",
+            "rating": 5,
+            "comment": "Great laptop, very fast!"
+          },
+          {
+            "name": "Jane Smith",
+            "rating": 4,
+            "comment": "Good value for money."
+          }
+        ]
+      }
+
+  ]
+  
