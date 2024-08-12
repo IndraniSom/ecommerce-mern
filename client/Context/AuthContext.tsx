@@ -1,8 +1,8 @@
-
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 export interface User {
   firstName: string;
@@ -66,13 +66,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (res.ok) {
-        router.push('/login');
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration successful!',
+          text: 'You can now login with your credentials.',
+        }).then(() => {
+          router.push('/login');
+        });
       } else {
         const data = await res.json();
-        alert(data.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration failed',
+          text: data.message,
+        });
       }
     } catch (error) {
-      alert('Registration failed');
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration failed',
+        text: 'An error occurred during registration.',
+      });
     }
   };
 
@@ -89,13 +103,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem('token', data.token);
         setIsAuthenticated(true);
         setUser(data.user);
-        router.push('/');
+        Swal.fire({
+          icon: 'success',
+          title: 'Login successful!',
+        }).then(() => {
+          router.push('/');
+        });
       } else {
         const data = await res.json();
-        alert(data.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Login failed',
+          text: data.message,
+        });
       }
     } catch (error) {
-      alert('Login failed');
+      Swal.fire({
+        icon: 'error',
+        title: 'Login failed',
+        text: 'An error occurred during login.',
+      });
     }
   };
 
@@ -110,12 +137,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.removeItem('token');
         setIsAuthenticated(false);
         setUser(undefined);
-        router.push('/');
+        Swal.fire({
+          icon: 'success',
+          title: 'Logout successful!',
+        }).then(() => {
+          router.push('/');
+        });
       } else {
-        alert('Logout failed');
+        Swal.fire({
+          icon: 'error',
+          title: 'Logout failed',
+          text: 'An error occurred during logout.',
+        });
       }
     } catch (error) {
-      alert('Logout error');
+      Swal.fire({
+        icon: 'error',
+        title: 'Logout failed',
+        text: 'An error occurred during logout.',
+      });
     }
   };
 

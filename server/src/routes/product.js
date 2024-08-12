@@ -9,7 +9,8 @@ import {
   deleteProductByUserId, 
   getAllProducts,
   getProductsByCategory ,
-  getProductById// Make sure this is imported
+  getProductById,
+  getfeaturedProduct
 } from '../controllers/productController.js';
 import { searchProducts } from '../controllers/searchcontroller.js'; // Import the search controller
 
@@ -22,7 +23,8 @@ router.get('/user/:userId', getUserUploadedProduct);
 router.delete('/delete/:productId', deleteProduct);
 router.delete('/delete/:userId/:productId', deleteProductByUserId);
 router.get('/', getAllProducts);
-router.get('/search', searchProducts); // Add the search route
+router.get('/search', searchProducts);
 router.get('/category/:category', getProductsByCategory);
 router.get('/id/:id',getProductById);
+router.get('/featured', getfeaturedProduct); 
 export default router;

@@ -18,15 +18,15 @@ const MarqueeComponent = () => {
   }, [isAuthenticated, user]);
 
   return (
-    <div className='flex w-full bg-[#E7D4B5] h-8 font-Poppins text-sm'>
-      <div className='flex w-[100%] md:w-[70%]'>
+    <div className='flex flex-col md:flex-row w-full bg-[#E7D4B5] h-16 md:h-8 font-Poppins text-sm'>
+      <div className='flex w-full md:w-[70%]'>
         <Marquee>
-          <span className="mx-10">😃2M+ HAPPY CUSTOMERS</span>
-          <span className="mx-10">💱 7 DAYS FREE EXCHANGE</span>
-          <span className="mx-10">🚚 FREE SHIPPING ABOVE ₹499</span>
+          <span className="mx-3 md:mx-10">😃2M+ HAPPY CUSTOMERS</span>
+          <span className="mx-3 md:mx-10">💱 7 DAYS FREE EXCHANGE</span>
+          <span className="mx-3 md:mx-10">🚚 FREE SHIPPING ABOVE ₹499</span>
         </Marquee>
       </div>
-      <div className='hidden md:flex w-[30%] gap-10 pl-20 pt-1 font-Cinzel_Decorative'>
+      <div className=' flex w-full md:w-[30%] gap-5 md:gap-10 pl-20 pt-1 font-Cinzel_Decorative '>
         {isAuthenticated ? (
           <>
             <span className='pt-1'>{greeting}</span>
@@ -35,9 +35,9 @@ const MarqueeComponent = () => {
         ) : (
           <Link href="/login" className='pt-1'>Login/SignUp</Link>
         )}
-        <div className='flex'>
+        
           <Link href="/orderhistory" className='pt-1'>Track your orders</Link>
-        </div>
+        
       </div>
     </div>
   );

@@ -41,6 +41,10 @@ const productSchema = new Schema({
             comment: { type: String, required: true },
         },
     ],
+    featured:{
+        type: Boolean,
+        default: false,
+    }
 
 }, { timestamps: true });
 

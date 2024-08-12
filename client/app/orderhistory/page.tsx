@@ -44,7 +44,7 @@ const OrderPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="bg-background mx-auto p-4 min-h-screen items-center justify-center flex flex-col">
       <h1 className="text-3xl font-bold mb-6 text-center">My Orders</h1>
       {orders.length > 0 ? (
         <div className="overflow-x-auto">
@@ -56,7 +56,7 @@ const OrderPage: React.FC = () => {
                 <th className="py-3 px-6 text-left">Total</th>
                 <th className="py-3 px-6 text-left">Paid</th>
                 <th className="py-3 px-6 text-left">Delivered</th>
-                <th className="py-3 px-6 text-center">Details</th>
+               
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
@@ -68,36 +68,31 @@ const OrderPage: React.FC = () => {
                   <td className="py-3 px-6 text-left whitespace-nowrap">
                     {order._id}
                   </td>
-                  <td className="py-3 px-6">
+                  
                     {order.orderItems.map((item: any, index: any) => (
-                      <div key={index} className="mb-2 flex">
-                        <p className="font-medium text-gray-800">{item.name}</p>
+                      <>
+                       <td key={index} className="py-3 px-6">
+                       <p className="font-medium text-gray-800">{item.name}</p>
+                        </td> 
 
-                        <td className="py-3 px-6">
-                          ${item.price}
+                        <td key={index} className="py-3 px-6">
+                          {item.price}INR
                         </td>
-                      </div>
+                        </>
                     ))}
-                  </td>
-
-                  <td className="py-3 px-6">
-                    {order.isPaid
-                      ? order.paidAt.substring(0, 10)
-                      : "No"}
-                  </td>
+                  
                   <td className="py-3 px-6">
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
                       : "No"}
                   </td>
-                  <td className="py-3 px-6 text-center">
-                    <button
-                      onClick={() => router.push(`/order/${order._id}`)}
-                      className="text-blue-500 hover:underline"
-                    >
-                      Details
-                    </button>
+                 
+                  <td className="py-3 px-6">
+                    {order.isDelivered
+                      ? order.deliveredAt.substring(0, 10)
+                      : "No"}
                   </td>
+                  
                 </tr>
               ))}
             </tbody>

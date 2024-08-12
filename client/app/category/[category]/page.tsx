@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';   
 import { useAuth } from '@/Context/AuthContext'; 
 import { useMycontext } from '@/Context/CartContext';              
+import Navbar from '@/components/custom/navbar';
+import Footer from '@/components/custom/footer';
 interface Product {
   _id: string;
   name: string;
@@ -125,6 +127,7 @@ const ProductsPage = ({ params }: { params: { category: string } }) => {
 
   return (
     <div className="min-h-screen bg-background p-6">
+      <Navbar/>
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 pt-20 pb-20">Products in {params.category}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
@@ -145,6 +148,7 @@ const ProductsPage = ({ params }: { params: { category: string } }) => {
           </div>
         ))}
       </div>
+      <Footer/>
     </div>
   );
 };

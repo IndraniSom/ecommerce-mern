@@ -1,13 +1,10 @@
-
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useMycontext } from '@/Context/CartContext';
-import Script from 'next/script';
-import Razorpay from 'razorpay';
+import Swal from 'sweetalert2';
 
 declare global {
   interface Window {
@@ -28,6 +25,7 @@ const CheckoutPage: React.FC = () => {
   const router = useRouter();
   const DELIVERY_FEE = 40;
   const [counts, setCounts] = useState<number[]>([]);
+
   useEffect(() => {
     const storedCartItems = localStorage.getItem('cartItems');
     if (storedCartItems) {
@@ -43,11 +41,12 @@ const CheckoutPage: React.FC = () => {
   const calculateTotal = () => {
     return calculateSubtotal() + DELIVERY_FEE;
   };
+
   const razorPayPaymentHandler = async () => {
     setIsProcessing(true);
     try {
       const totalAmount = calculateTotal() * 100; // Convert to smallest currency unit (paise)
-  
+    
       const response = await fetch('/api/create-order', {
         method: 'POST',
         headers: {
@@ -55,43 +54,60 @@ const CheckoutPage: React.FC = () => {
         },
         body: JSON.stringify({ amount: totalAmount }), // Send the amount to the backend
       });
-  
+    
       const data = await response.json();
-  
+    
       if (!data.orderId) {
         throw new Error('Failed to create order');
       }
-  
+    
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_API_ID,
+        key: process.env.RAZORPAY_API_KEY,
         amount: totalAmount,
         currency: 'INR',
         name: 'Prathibha Connect',
         description: 'Payment',
         image: '/logo.png',
         order_id: data.orderId,
-        handler: function(response:any) {
-          console.log('Payment Successful');
-          // You can trigger additional actions here like saving the payment status to your database
+        handler: function(response: any) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Payment Successful!',
+            text: 'Your payment was completed successfully.',
+          });
+         
         },
         prefill: {
-          name: 'Prathibha Connect',
-          email: '',
-          contact: ''
+          name: '',
+          email: '', 
+          contact: '', 
         },
         theme: {
-          color: '#3399cc'
+          color: '#3399cc',
+        },
+        method: {
+          upi: true, // Enable UPI option
+          netbanking: true,
+          card: true,
+          wallet: true,
+          emi: true,
         },
       };
-  
+    
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Error',
+        text: 'An error occurred during the payment process.',
+      });
       console.error('Payment Error:', error);
     } finally {
       setIsProcessing(false);
     }
   };
+  
   
   const ordercreate = async () => {
     const orderItems = cart.items.map(item => ({
@@ -121,19 +137,34 @@ const CheckoutPage: React.FC = () => {
       });
   
       if (res.ok) {
-        alert('Order created successfully');
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Created',
+          text: 'Your order has been created successfully.',
+        });
         localStorage.removeItem("cartItems");
         setCart({ items: [] });
         setCounts([]);
         
       } else {
         const data = await res.json();
+        Swal.fire({
+          icon: 'error',
+          title: 'Order Creation Failed',
+          text: data.message,
+        });
         console.error('Order creation failed:', data.message);
       }
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Order Creation Error',
+        text: 'An error occurred while creating your order.',
+      });
       console.error('Order creation error:', error);
     }
   };
+
   const handlePayNow = () => {
     ordercreate();
     razorPayPaymentHandler();
@@ -146,12 +177,48 @@ const CheckoutPage: React.FC = () => {
           <FaArrowAltCircleLeft className="h-10 w-10" />
           <span className="pt-1 pl-3">Go Back Home</span>
         </Link>
-        <div className="w-fit">
-          <input type="text" name="shippingAddress1" onChange={(e) => setOrderDetails({ ...orderDetails, shippingAddress1: e.target.value })} placeholder="Shipping Address" />
-          <input type="text" name="city" onChange={(e) => setOrderDetails({ ...orderDetails, city: e.target.value })} placeholder="City" />
-          <input type="text" name="postal" onChange={(e) => setOrderDetails({ ...orderDetails, postal: e.target.value })} placeholder="Postal Code" />
-          <input type="text" name="country" onChange={(e) => setOrderDetails({ ...orderDetails, country: e.target.value })} placeholder="Country" />
-          <input type="text" name="phone" onChange={(e) => setOrderDetails({ ...orderDetails, phone: e.target.value })} placeholder="Phone Number" />
+        <div className="w-full space-y-4">
+          <input
+            type="text"
+            name="shippingAddress1"
+            className="w-full p-3 bg-white border border-secondary_color rounded"
+            onChange={(e) =>
+              setOrderDetails({ ...orderDetails, shippingAddress1: e.target.value })
+            }
+            placeholder="Shipping Address"
+          />
+          <input
+            type="text"
+            name="city"
+            className="w-full p-3 bg-white border border-secondary_color rounded"
+            onChange={(e) => setOrderDetails({ ...orderDetails, city: e.target.value })}
+            placeholder="City"
+          />
+          <input
+            type="text"
+            name="postal"
+            className="w-full p-3 bg-white border border-secondary_color rounded"
+            onChange={(e) =>
+              setOrderDetails({ ...orderDetails, postal: e.target.value })
+            }
+            placeholder="Postal Code"
+          />
+          <input
+            type="text"
+            name="country"
+            className="w-full p-3 bg-white border border-secondary_color rounded"
+            onChange={(e) =>
+              setOrderDetails({ ...orderDetails, country: e.target.value })
+            }
+            placeholder="Country"
+          />
+          <input
+            type="text"
+            name="phone"
+            className="w-full p-3 bg-white border border-secondary_color rounded"
+            onChange={(e) => setOrderDetails({ ...orderDetails, phone: e.target.value })}
+            placeholder="Phone Number"
+          />
         </div>
       </div>
       <div className="flex flex-col pt-10">
@@ -172,7 +239,7 @@ const CheckoutPage: React.FC = () => {
             <div className="w-full items-center justify-center flex pt-5">
               <button
                 onClick={handlePayNow}
-                className="px-5 w-40 py-2 border-2 border-black dark:border-white uppercase bg-secondary_color items-center justify-center text-black transition duration-200 text-sm shadow-[1px_1px_rgba(0,0,0),2px_2px_rgba(0,0,0),3px_3px_rgba(0,0,0),4px_4px_rgba(0,0,0),5px_5px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)]"
+                className="px-5 w-40 py-2 border-2 border-black dark:border-white uppercase bg-secondary_color items-center justify-center text-white transition duration-200 text-sm shadow-[1px_1px_rgba(0,0,0),2px_2px_rgba(0,0,0),3px_3px_rgba(0,0,0),4px_4px_rgba(0,0,0),5px_5px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)]"
               >
                 Pay Now →
               </button>

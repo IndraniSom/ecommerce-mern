@@ -205,3 +205,15 @@ export const getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+export const getfeaturedProduct= async (req, res) => {
+  
+  try {
+   
+    const products = await Product.find().sort({ searchCount: -1 }).limit(2);
+    res.json(products);
+    console.log("No errors found");
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching most searched products' });
+  }
+
+ };
