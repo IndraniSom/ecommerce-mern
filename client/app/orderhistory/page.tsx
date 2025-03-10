@@ -1,6 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { Button } from "@/components/ui/button";
 
 const OrderPage: React.FC = () => {
   interface Order {
@@ -16,6 +19,7 @@ const OrderPage: React.FC = () => {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const router = useRouter();
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -43,66 +47,61 @@ const OrderPage: React.FC = () => {
     fetchOrders();
   }, []);
 
+  const downloadPDF = async () => {
+    const input = pdfRef.current;
+    if (!input) return;
+
+    const canvas = await html2canvas(input);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+    const imgWidth = 190;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+    pdf.save("order_history.pdf");
+  };
+
   return (
     <div className="bg-background mx-auto p-4 min-h-screen items-center justify-center flex flex-col">
       <h1 className="text-3xl font-bold mb-6 text-center">My Orders</h1>
-      {orders.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                <th className="py-3 px-6 text-left">ID</th>
-                <th className="py-3 px-6 text-left">Items</th>
-                <th className="py-3 px-6 text-left">Total</th>
-                <th className="py-3 px-6 text-left">Paid</th>
-                <th className="py-3 px-6 text-left">Delivered</th>
-               
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {orders.map((order) => (
-                <tr
-                  key={order._id}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-3 px-6 text-left whitespace-nowrap">
-                    {order._id}
-                  </td>
-                  
-                    {order.orderItems.map((item: any, index: any) => (
-                      <>
-                       <td key={index} className="py-3 px-6">
-                       <p className="font-medium text-gray-800">{item.name}</p>
-                        </td> 
-
-                        <td key={index} className="py-3 px-6">
-                          {item.price}INR
-                        </td>
-                        </>
-                    ))}
-                  
+      <div ref={pdfRef} className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+              <th className="py-3 px-6 text-left">ID</th>
+              <th className="py-3 px-6 text-left">Items</th>
+              <th className="py-3 px-6 text-left">Total</th>
+              <th className="py-3 px-6 text-left">Delivered</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-600 text-sm font-light">
+            {orders.map((order) => (
+              <tr key={order._id} className="border-b border-gray-200 hover:bg-gray-100">
+                <td className="py-3 px-6 text-left whitespace-nowrap">{order._id}</td>
+                {order.orderItems.map((item, index) => (
+                  <div key={index}>
                   <td className="py-3 px-6">
-                    {order.isDelivered
-                      ? order.deliveredAt.substring(0, 10)
-                      : "No"}
-                  </td>
+                  
+                    <p key={index}>{item.name} </p>
                  
-                  <td className="py-3 px-6">
-                    {order.isDelivered
-                      ? order.deliveredAt.substring(0, 10)
-                      : "No"}
-                  </td>
-                  
-                </tr>
+                </td>
+                <td className="py-3 px-6">₹{item.price}</td>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="text-center text-gray-700 mt-10">
-          No orders found
-        </div>
-      )}
+                <td className="py-3 px-6">
+                  {order.isDelivered ? order.deliveredAt.substring(0, 10) : "No"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-6">
+        <Button onClick={downloadPDF} className="bg-blue-600 text-white">
+          Download Order History as PDF
+        </Button>
+      </div>
     </div>
   );
 };

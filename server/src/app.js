@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 // Array of allowed origins
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3000/checkout'];
+const allowedOrigins = ['http://localhost:3000','http://localhost:5000'];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -40,7 +40,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET, {
 }));
 
 app.get('/', (req, res) => {
-  res.send('Hello This is ARC Backend Created by @lokesh-7977');
+  res.send('Hello This is created By Indrani som');
 });
 
 app.use('/api', routes);
