@@ -1,57 +1,54 @@
 "use client";
 import React from "react";
-import { ThreeDCardDemo } from "../ui/threedcarddemo";
-import { Card } from "@/components/ui/cardone";
 import Link from "next/link";
 type Product = {
+  _id: number;
   title: string;
-  categoryId: string;
-  thumbnail: string;
-  description: string;
+  date: string;
+  slug: string;
+  excerpt: string;
+  image: string;
+  content: string;
+  category: string;
+  createdAt: Date;
+  updatedAt: Date;
+}[];
+
+
+type BlogsProps = {
+  blogs: Product;
 };
 
-export const products: Product[] = [
-  {
-    title: "2024 Collection",
-    categoryId: "https://cursor.so",
-    thumbnail: "/assets/bagblog.png",
-    description: "March 01",
-  },
-  {
-    title: "Skin is our priority",
-    categoryId: "https://userogue.com",
-    thumbnail: "/assets/skinblog.png",
-    description: "July 02",
-  },
-  {
-    title: "Sustainable interior ",
-    categoryId: "https://cursor.so",
-    thumbnail: "/assets/interiorblog.png",
-    description: "June 09",
-  },
-  {
-    title: "Sustainable Clothing ",
-    categoryId: "https://gomoonbeam.com",
-    thumbnail: "/assets/blog4.png",
-    description: "Jan 01",
-  },
-];
-
-const Blogs: React.FC = () => {
+const Blogs: React.FC<BlogsProps> = ({ blogs }) => {
   return (
-    <div id="blogs" className="flex flex-col w-full pt-5 md:pt-20">
-      <div className="flex w-full justify-center items-center">
-        <h1 className="text-3xl md:text-6xl font-bold font-Cinzel_Decorative pl-5 md:pl-20 text-gray-800 dark:text-gray-200">
-          Our Blogs
-        </h1>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-7 px-5 md:px-20 py-5 md:py-10">
-        {products.map((product) => (
-          <Card key={product.title} product={product} showButton={true} />
-        ))}
-      </div>
-      
-    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {blogs?.map((blog) => (
+      <Link href={`/blogs/${blog.slug}`} key={blog._id}>
+        <div className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col bg-white dark:bg-gray-800">
+          <div className="relative h-48 w-full">
+            {/* Replace with actual Image component once images are available */}
+            <img className="h-full w-full bg-cover" src={blog.image} alt={blog.title}/>
+          </div>
+          <div className="p-5 flex flex-col flex-grow">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {new Date(blog.createdAt).toLocaleDateString()}
+            </p>
+            <h2 className="text-xl font-bold my-2 text-gray-800 dark:text-gray-200">
+              {blog.title}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 flex-grow">
+              {blog.excerpt}
+            </p>
+            <div className="mt-4">
+              <span className="text-primary hover:underline font-medium">
+                Read more →
+              </span>
+            </div>
+          </div>
+        </div>
+      </Link>
+    ))}
+  </div>
   );
 };
 
