@@ -31,7 +31,9 @@ const BlogDetailPage = () => {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/blogs/" + slug);
+        const response = await fetch("/api/blogs/" + slug,{
+          credentials: "include"
+        });
         if (!response.ok) throw new Error("Failed to fetch blog");
         const data = await response.json();
         setBlog(data.blog);

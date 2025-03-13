@@ -4,7 +4,12 @@ export const GET = async (req: NextRequest) => {
     try {
         const slug = req.nextUrl.pathname.split('/').pop();
         
-        const blogs = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs/${slug}`);
+        const blogs = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs/${slug}`,{
+            headers:{
+                'x-Auth-Token': `${req.cookies.get('token')?.value}`
+            },
+            credentials: "include"
+        });
 
         const data = await blogs.json();
         if(!blogs.ok)        

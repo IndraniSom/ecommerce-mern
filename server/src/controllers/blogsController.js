@@ -16,7 +16,7 @@ export const createBlog = async (req, res) => {
     }
 
     const blog = new Blog({
-      author: "admin",
+      author: req.user._id,
       title,
       excerpt,
       slug,
@@ -42,11 +42,24 @@ export const getBlogs = async (req, res) => {
     if (page < 1) page = 1;
     if (limit < 1) limit = 10;
     const skip = (page - 1) * limit;
-    const blogs = await Blog.find({}).skip(skip).limit(limit);
+    let blogs = await Blog.find({}).skip(skip).limit(limit).populate("author");
+    blogs = blogs.map((blog) => ({
+      _id: blog._id,
+      title: blog.title,
+      excerpt: blog.excerpt,
+      slug: blog.slug,
+      content: blog.content,
+      image: blog.image,
+      category: blog.category,
+      author: blog.author.firstName + " " + blog.author.lastName,
+      createdAt: blog.createdAt,
+      updatedAt: blog.updatedAt,
+    }));
     const totalBlogs = await Blog.countDocuments();
     const totalPages = Math.ceil(totalBlogs / limit);
     res.status(200).json({ blogs, totalBlogs, totalPages, currentPage: page });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -54,12 +67,25 @@ export const getBlogs = async (req, res) => {
 export const getBlogsBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    const blog = await Blog.findOne({ slug });
+    let blog = await Blog.findOne({ slug }).populate("author");
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
+    blog = {
+      _id: blog._id,
+      title: blog.title,
+      excerpt: blog.excerpt,
+      slug: blog.slug,
+      content: blog.content,
+      image: blog.image,
+      category: blog.category,
+      createdAt: blog.createdAt,
+      updatedAt: blog.updatedAt,
+      author: blog.author.firstName + " " + blog.author.lastName,
+    };
     res.status(200).json({ blog: blog });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -73,6 +99,7 @@ export const deleteBlogById = async (req, res) => {
     }
     res.status(200).json({ message: "Blog deleted successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -108,6 +135,7 @@ export const updateBlogById = async (req, res) => {
       .status(200)
       .json({ blog: updatedBlog, message: "Blog updated successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };

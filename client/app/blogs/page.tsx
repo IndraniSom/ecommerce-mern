@@ -32,7 +32,9 @@ const BlogsPage = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "/api/blogs?page=" + currentPage + "&limit=" + blogsPerPage
+          "/api/blogs?page=" + currentPage + "&limit=" + blogsPerPage,{
+            credentials: "include"
+          }
         );
         if (!response.ok) throw new Error("Failed to fetch blogs");
         const data = await response.json();

@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
-    try {
+    try {        
         const { searchParams } = new URL(req.url);
         const page = searchParams.get('page') || '1'; // Default to page 1 if not provided
         const limit = searchParams.get('limit') || '10'; // Default to 5 blogs per page if not provided
-        const blogs = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs?page=${page}&limit=${limit}`);
+        const blogs = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs?page=${page}&limit=${limit}`,{
+            headers:{
+                'x-Auth-Token': `${req.cookies.get('token')?.value}`
+            },
+            credentials: "include"
+        });
 
         const data = await blogs.json();
         if(!blogs.ok)        

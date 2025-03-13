@@ -122,6 +122,7 @@ export default function EditBlog() {
       const response = await fetch("/api/blogs/update/" + formData._id, {
         method: "POST",
         body: blogData,
+        credentials: "include",
       });
 
       if (!response.ok) {

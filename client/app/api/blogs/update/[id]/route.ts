@@ -6,7 +6,11 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
         const { id } = params;
         const blogs = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs/${id}`, {
             method: 'PUT',
-            body: formData
+            headers:{
+                'x-Auth-Token': `${req.cookies.get('token')?.value}`
+            },
+            body: formData,
+            credentials: 'include',
         });
 
         const data = await blogs.json();

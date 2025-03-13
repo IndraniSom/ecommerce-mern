@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const blogSchema = new Schema({
     author: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Auth",
         required: true,
     },
     title: {

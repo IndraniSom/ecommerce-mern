@@ -5,7 +5,7 @@ import User from "../models/auth.js";
 // Middleware to authenticate and authorize users
 const auth = async (req, res, next) => {
   // Get token from header
-  const token = req.header("x-Auth-Token");
+  const token = req.header("x-Auth-Token") || req.cookies['token'];
 
   // Check if token is provided
   if (!token) {

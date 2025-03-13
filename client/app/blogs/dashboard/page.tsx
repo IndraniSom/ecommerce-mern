@@ -28,7 +28,9 @@ export default function BlogDashboard() {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/blogs");
+        const response = await fetch("/api/blogs",{
+          credentials: "include"
+        });
         if (!response.ok) throw new Error("Failed to fetch blogs");
         const data = await response.json();
 

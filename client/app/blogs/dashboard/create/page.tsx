@@ -99,6 +99,7 @@ export default function CreateBlog() {
       const response = await fetch("/api/blogs/create", {
         method: "POST",
         body: blogData,
+        credentials: "include",
       });
 
       if (!response.ok) {
