@@ -29,6 +29,9 @@ export const DELETE = async (req: NextRequest, { params }: { params: { slug: str
         const { slug } = params;
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/blogs/${slug}`, {
             method: "DELETE",
+            headers:{
+                'x-Auth-Token': `${req.cookies.get('token')?.value}`
+            },
         });
 
         if (!response.ok) {

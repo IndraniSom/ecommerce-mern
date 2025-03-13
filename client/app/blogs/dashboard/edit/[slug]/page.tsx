@@ -18,6 +18,7 @@ import { toast } from "react-hot-toast";
 import Navbar from "@/components/custom/navbar";
 import Footer from "@/components/custom/footer";
 import MarkdownComp from "@/components/custom/markdown";
+import { get } from "http";
 
 interface Blog {
   _id: string;
@@ -37,8 +38,10 @@ export default function EditBlog() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewContent, setPreviewContent] = useState<boolean>(false);
+  const [defaultCategory, setDefaultCategory] = useState<string>("");
   const params = useParams();
   const slug = params.slug as string;
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -50,7 +53,7 @@ export default function EditBlog() {
     defaultValues: {
       title: "",
       content: "",
-      category: "Fashion",
+      category: "",
       excerpt: "",
       slug: "",  
     },
@@ -59,6 +62,7 @@ export default function EditBlog() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/blogs/" + slug);
         if (!response.ok) throw new Error("Failed to fetch blog");
         const data = await response.json();
@@ -69,8 +73,12 @@ export default function EditBlog() {
         setValue("excerpt", data.blog.excerpt);
         setValue("slug", data.blog.slug);
         setImagePreview(data.blog.image);
+        setDefaultCategory(data.blog.category)
       } catch (error) {
         console.error("Error fetching blogs:", error);
+      }
+      finally{
+        setIsLoading(false);
       }
     };
 
@@ -138,6 +146,20 @@ export default function EditBlog() {
       setIsSubmitting(false);
     }
   };
+  if(isLoading){
+    return (
+      <div className="w-full min-h-screen bg-background">
+        <Navbar />
+        <div className="w-full flex flex-col items-center justify-center py-20 px-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+            Loading
+          </h1>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
 
   return (
     <div className="w-full min-h-screen bg-background">
@@ -178,7 +200,7 @@ export default function EditBlog() {
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Select
-                defaultValue="Fashion"
+                defaultValue={defaultCategory}
                 onValueChange={(value) => setValue("category", value)}
               >
                 <SelectTrigger>
