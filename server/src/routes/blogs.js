@@ -1,14 +1,22 @@
 import { Router } from "express";
-import { getBlogs, createBlog, getBlogsBySlug, deleteBlogById, updateBlogById } from "../controllers/blogsController.js";
+import {
+  getBlogs,
+  createBlog,
+  getBlogsBySlug,
+  deleteBlogById,
+  updateBlogById,
+} from "../controllers/blogsController.js";
 import multer from "multer";
 import { cloudinary } from "../app.js";
-import fs from 'fs';
+import fs from "fs";
+import { isAdmin } from "../middlewares/authMiddleware.js";
+import auth from "../middlewares/authMiddleware.js";
 
 // Creating uploads folder if not already present
 // In "uploads" folder we will temporarily upload
 // image before uploading to cloudinary
 if (!fs.existsSync("./uploads")) {
-    fs.mkdirSync("./uploads");
+  fs.mkdirSync("./uploads");
 }
 
 export async function uploadToCloudinary(locaFilePath) {
@@ -18,7 +26,7 @@ export async function uploadToCloudinary(locaFilePath) {
   let mainFolderName = "blogs";
   // filePathOnCloudinary: path of image we want
   // to set when it is uploaded to cloudinary
-  let filePathOnCloudinary = mainFolderName + "/" + locaFilePath.split('\\')[1];
+  let filePathOnCloudinary = mainFolderName + "/" + locaFilePath.split("\\")[1];
 
   return cloudinary.uploader
     .upload(locaFilePath, { public_id: filePathOnCloudinary })
@@ -36,7 +44,7 @@ export async function uploadToCloudinary(locaFilePath) {
     })
     .catch((error) => {
       // Remove file from local uploads folder
-      console.log(error)
+      console.log(error);
       fs.unlinkSync(locaFilePath);
       return { message: "Fail" };
     });
@@ -57,7 +65,7 @@ const router = Router();
 
 router.get("/", getBlogs);
 router.get("/:slug", getBlogsBySlug);
-router.put("/:id", upload.single('image'), updateBlogById);
-router.post("/create", upload.single("image"), createBlog);
-router.delete("/:id", deleteBlogById);
+router.put("/:id", auth, isAdmin, upload.single("image"), updateBlogById);
+router.post("/create", auth, isAdmin, upload.single("image"), createBlog);
+router.delete("/:id", auth, isAdmin, deleteBlogById);
 export default router;
