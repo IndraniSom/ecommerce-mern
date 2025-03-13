@@ -54,7 +54,9 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      // No expiration for the cookie to match the no-expiration token policy
+      sameSite: "lax",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
     });
 
     return res.status(200).json({ message: "User logged in successfully", token, user });
