@@ -21,7 +21,7 @@ export default function RootLayout({
     <AuthProvider>
     <MyContextProvider>
     <html lang="en">
-      <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+      <link rel="icon" href="/assets/favicon.ico" sizes="512x512" />
       <body className={inter.className}>{children}</body>
     </html>
     <Script src="https://checkout.razorpay.com/v1/checkout.js"

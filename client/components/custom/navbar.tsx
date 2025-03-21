@@ -5,6 +5,7 @@ import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import MobileNavbar from "./mobilenavbar";
 import { useMycontext } from "@/Context/CartContext";
 import axios from "axios";
+import Image from "next/image";
 
 export function Navbar() {
   const { cart } = useMycontext();
@@ -12,6 +13,7 @@ export function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<{ _id: string, name: string, description: string }[]>([]);
   const [isFixed, setIsFixed] = useState(false);
+  const image="/assets/logo.png";
 
   const toggleSearch = () => {
     setSearchOpen(!searchOpen);
@@ -51,11 +53,11 @@ export function Navbar() {
       <div className="flex justify-between px-10 py-4">
         <Link href="/" className="hidden md:flex">
           <div className="text-2xl font-semibold font-Cinzel_Decorative text-secondary_color pt-2">
-            ARC
+          <Image src={image} alt="Logo" width={100} height={10} />
           </div>
         </Link>
 
-        <div className="pt-2 hidden md:flex justify-between gap-10 text-text_black">
+        <div className="pt-7 hidden md:flex justify-between gap-10 text-text_black">
           <Link href="/newlaunches" className="hover:text-secondary_color font-Poppins">
             New
           </Link>
@@ -75,14 +77,14 @@ export function Navbar() {
 
         <div className="hidden md:flex gap-5">
           <button
-            className="bg-transparent text-black px-5 py-3 h-fit font-Poppins align-middle flex justify-center text-nowrap"
+            className="bg-transparent text-black px-5 py-3 pt-7 h-fit font-Poppins align-middle flex justify-center text-nowrap"
             onClick={toggleSearch}
           >
             <FaSearch className="w-5 h-5 mr-2 text-secondary_color" />
             Search
           </button>
           <Link href="/cart">
-            <button className="bg-transparent text-black px-5 py-3 h-fit font-Poppins align-middle flex justify-center text-nowrap relative">
+            <button className="bg-transparent text-black px-5 py-3 pt-7 h-fit font-Poppins align-middle flex justify-center text-nowrap relative">
               <FaShoppingCart className="w-5 h-5 mr-2 text-[#9D4439]" />
               {cart.items.length > 0 && (
                 <span className="absolute top-0 left-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-secondary_color rounded-full">
