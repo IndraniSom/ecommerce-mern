@@ -44,7 +44,7 @@ export async function uploadToCloudinary(locaFilePath) {
     })
     .catch((error) => {
       // Remove file from local uploads folder
-      console.log(error);
+      logger.error(error);
       fs.unlinkSync(locaFilePath);
       return { message: "Fail" };
     });

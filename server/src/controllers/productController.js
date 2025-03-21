@@ -86,8 +86,8 @@ export const getProductById = async (req, res) => {
     res.status(200).json(product);
   } catch (error) {
     console.error('Error fetching product by ID:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
 export const updateProduct = async (req, res) => {
@@ -202,18 +202,18 @@ export const getProductsByCategory = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products by category:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
-export const getfeaturedProduct= async (req, res) => {
-  
+export const getfeaturedProduct = async (req, res) => {
+
   try {
-   
+
     const products = await Product.find().sort({ searchCount: -1 }).limit(2);
     res.json(products);
-    console.log("No errors found");
+    logger.info("No errors found");
   } catch (error) {
     res.status(500).json({ message: 'Error fetching most searched products' });
   }
 
- };
+};
