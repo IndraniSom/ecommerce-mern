@@ -1,3 +1,4 @@
+import logger from "../../utils/logger.js";
 import Blog from "../models/blog.js";
 import { uploadToCloudinary } from "../routes/blogs.js";
 
@@ -30,7 +31,7 @@ export const createBlog = async (req, res) => {
       .status(201)
       .json({ blog: createdBlog, message: "Blog created successfully" });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -59,7 +60,7 @@ export const getBlogs = async (req, res) => {
     const totalPages = Math.ceil(totalBlogs / limit);
     res.status(200).json({ blogs, totalBlogs, totalPages, currentPage: page });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -85,7 +86,7 @@ export const getBlogsBySlug = async (req, res) => {
     };
     res.status(200).json({ blog: blog });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -99,7 +100,7 @@ export const deleteBlogById = async (req, res) => {
     }
     res.status(200).json({ message: "Blog deleted successfully" });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -135,7 +136,7 @@ export const updateBlogById = async (req, res) => {
       .status(200)
       .json({ blog: updatedBlog, message: "Blog updated successfully" });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };

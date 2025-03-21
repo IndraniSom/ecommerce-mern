@@ -8,6 +8,7 @@ import routes from "./routes/index.js";
 import productsRouter from "./routes/product.js";
 import orderRouter from "./routes/order.js"; // Import the order router
 import blogRouter from "./routes/blogs.js"; // Import the blog router
+import logger from "../utils/logger.js";
 dotenv.config();
 
 if (
@@ -79,7 +80,7 @@ app.all("*", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+  logger.info(`Server listening on http://localhost:${PORT}`);
 });
 
 export default app;
