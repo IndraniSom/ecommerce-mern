@@ -4,10 +4,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import xssClean from "xss-clean";
 import routes from "./routes/index.js";
 import productsRouter from "./routes/product.js";
-import orderRouter from "./routes/order.js"; // Import the order router
-import blogRouter from "./routes/blogs.js"; // Import the blog router
+import orderRouter from "./routes/order.js"; 
+import blogRouter from "./routes/blogs.js"; 
 import logger from "../utils/logger.js";
 dotenv.config();
 
@@ -20,7 +22,6 @@ if (
   process.exit(1);
 }
 
-// Cloudinary Configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -29,12 +30,12 @@ cloudinary.config({
 
 const app = express();
 
-// Array of allowed origins
+app.disable('x-powered-by');
+
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5000"];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg =
@@ -48,8 +49,46 @@ const corsOptions = {
   credentials: true,
 };
 
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && !allowedOrigins.includes(origin)) {
+    return res.status(403).json({ 
+      success: false,
+      message: 'Forbidden: Invalid Origin',
+      error: 403
+    });
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  const userAgent = req.headers['user-agent'] || '';
+  const blockedAgents = ['PostmanRuntime', 'k6', 'curl', 'insomnia', 'ApacheBench', 'Go-http-client']; 
+  if (process.env.NODE_ENV === 'production' && blockedAgents.some(agent => userAgent.includes(agent))) {
+    return res.status(403).json({ 
+      success: false,
+      message: 'Forbidden: Unauthorized User-Agent',
+      error: 403
+    });
+  }
+  next();
+});
+
+// Security middleware
+app.use(helmet());
+app.use(helmet.frameguard({ action: 'deny' }));
+app.use(xssClean());
+
 // Use CORS middleware with options
 app.use(cors(corsOptions));
+
+// Parse raw body for signature verification if needed
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  }
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,7 +96,7 @@ app.use(
   cookieParser(process.env.COOKIE_SECRET, {
     httpOnly: true,
     sameSite: "strict",
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
   })
 );
 
@@ -65,10 +104,47 @@ app.get("/", (req, res) => {
   res.send("Hello This is created By Indrani som");
 });
 
+// Rate limiting middleware
+const rateLimit = (windowMs, max) => {
+  const requests = {};
+  
+  return (req, res, next) => {
+    const ip = req.ip;
+    const now = Date.now();
+    requests[ip] = requests[ip] ? requests[ip].filter(time => now - time < windowMs) : [];
+
+    if (requests[ip].length >= max) {
+      return res.status(429).json({
+        success: false,
+        message: "Too many requests, please try again later",
+        error: 429
+      });
+    }
+    requests[ip].push(now);
+    next();
+  };
+};
+
+// Apply rate limiting to all routes
+app.use(rateLimit(15 * 60 * 1000, 100)); // 100 requests per 15 minutes
+
 app.use("/api", routes);
 app.use("/products", productsRouter);
 app.use("/api/order", orderRouter); // Use the order router
 app.use("/blogs", blogRouter); // Use the blog router
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  logger.error(`Error: ${err.message}`);
+  logger.error(err.stack);
+  
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    error: err.statusCode || 500
+  });
+});
+
 
 app.all("*", (req, res) => {
   res.status(404).json({
