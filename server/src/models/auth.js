@@ -27,6 +27,7 @@ const AuthSchema = new Schema(
         message: "Invalid email format",
       },
       unique: true,
+      index: true,
     },
     password: {
       type: String,

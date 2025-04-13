@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-
 const blogSchema = new Schema({
     author: {
         type: mongoose.Schema.Types.ObjectId,
@@ -12,9 +11,10 @@ const blogSchema = new Schema({
         type: String,
         required: true,
     },
-    slug:{
+    slug: {
         type: String,
-        required: true
+        required: true,
+        index: true,
     },
     excerpt: {
         type: String,
