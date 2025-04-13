@@ -75,15 +75,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Security middleware
 app.use(helmet());
 app.use(helmet.frameguard({ action: 'deny' }));
 app.use(xssClean());
 
-// Use CORS middleware with options
+
 app.use(cors(corsOptions));
 
-// Parse raw body for signature verification if needed
 app.use(express.json({
   verify: (req, res, buf) => {
     req.rawBody = buf.toString();
@@ -104,7 +102,7 @@ app.get("/", (req, res) => {
   res.send("Hello This is created By Indrani som");
 });
 
-// Rate limiting middleware
+
 const rateLimit = (windowMs, max) => {
   const requests = {};
   
