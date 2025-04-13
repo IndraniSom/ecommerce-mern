@@ -5,6 +5,7 @@ const productSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        index: true,
     },
     price: {
         type: Number,
@@ -21,6 +22,7 @@ const productSchema = new Schema({
     category: {
         type: String,
         required: true,
+        index: true,
     },
     countInStock: {
         type: Number,
